@@ -1,15 +1,15 @@
 import logging
 from os import getenv
 
-from classes import RabbitMQBroker
+from classes import RedisBroker
 
 BROKER_HOST = getenv("BROKER_HOST")
-BROKER_PORT = getenv("BROKER_PORT", 5672)
+BROKER_PORT = getenv("BROKER_PORT")
 BROKER_QUEUE = getenv("BROKER_QUEUE", "queue1")
 
 
 async def get_broker():
-    broker = RabbitMQBroker(BROKER_HOST, BROKER_PORT, BROKER_QUEUE)
+    broker = RedisBroker(BROKER_HOST, BROKER_PORT, BROKER_QUEUE)
     broker.open()
     try:
         yield broker

@@ -1,20 +1,14 @@
 services:
   broker:
-    image: rabbitmq:3.13.7-alpine
+    image: redis:7.4.1-bookworm
     restart: unless-stopped
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
     networks:
       - phonemouse
 
   api:
     build: .
     ports:
-      - "8000:8000"
+      - "10000:10000"
     restart: unless-stopped
     depends_on:
       - broker
@@ -22,7 +16,7 @@ services:
       - phonemouse
     environment:
       BROKER_HOST: broker
-      BROKER_PORT: 5672
+      BROKER_PORT: 6379
       BROKER_QUEUE: queue1
 
 networks:
