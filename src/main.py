@@ -42,11 +42,7 @@ async def websocket_endpoint(
 
             data = loads(data)
 
-            if data["event"] == "devicemotion":
-                broker.send(
-                    ",".join(str(data["acceleration"][key]) for key in ("x", "y", "z")),
-                )
-            else:
+            if data["event"] == "deviceorientation":
                 broker.send(
                     ",".join(str(data[key]) for key in ("alpha", "beta", "gamma")),
                 )

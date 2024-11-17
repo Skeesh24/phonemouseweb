@@ -35,7 +35,6 @@ class RabbitMQBroker(IBroker):
         self.conn.close()
 
     def send(self, body: str):
-        logging.info(body)
         self.channel.basic_publish(
             exchange="",
             routing_key=self.queue,
