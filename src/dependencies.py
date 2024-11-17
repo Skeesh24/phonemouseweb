@@ -1,10 +1,11 @@
 import logging
+from os import getenv
 
 from classes import RabbitMQBroker
 
-BROKER_HOST = "broker"
-BROKER_PORT = 5672
-BROKER_QUEUE = "queue1"
+BROKER_HOST = getenv("BROKER_HOST")
+BROKER_PORT = getenv("BROKER_PORT", 5672)
+BROKER_QUEUE = getenv("BROKER_QUEUE", "queue1")
 
 
 async def get_broker():
