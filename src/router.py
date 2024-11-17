@@ -1,35 +1,41 @@
 import asyncio
+import logging
 import random
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
+
+from dependencies import get_broker
+from interfaces import IBroker
 
 main_router = APIRouter(
     prefix="/api",
     tags=["API"],
 )
 
-current_state = (0, 0, 0)
 
-
-async def event_generator():
-    global current_state
+async def event_generator(
+    broker: IBroker,
+):
     while True:
-        await asyncio.sleep(0.001)  # Имитация задержки
-        # Генерация новых данных
-        current_state = (
-            random.randint(100, 100),
-            random.randint(100, 500),
-            random.randint(100, 500),
-        )
-        yield f"data: {current_state[0]},{current_state[1]},{current_state[2]}\n\n"
+        await asyncio.sleep(0.01)  # задержка
+
+        # получение данных из брокера сообщений
+        data = broker.receive()
+
+        if not data:
+            continue
+
+        yield f"data: {data}\n\n"
 
 
 @main_router.get(
     "/sse/",
 )
-async def sse():
+async def sse(
+    broker: IBroker = Depends(get_broker),
+):
     return StreamingResponse(
-        event_generator(),
+        event_generator(broker),
         media_type="text/event-stream",
     )
