@@ -1,10 +1,13 @@
 import logging
 import time
+from os import getenv
 
 # from pika import BasicProperties, BlockingConnection, ConnectionParameters
 from redis import Redis
 
 from interfaces import IBroker
+
+BROKER_USER = getenv("BROKER_USER")
 
 
 class RedisBroker(IBroker):
@@ -21,7 +24,9 @@ class RedisBroker(IBroker):
     def open(self):
         while True:
             try:
-                self.conn = Redis(host=self.host, port=self.port)
+                self.conn = Redis(
+                    host=self.host, port=self.port, ssl=True, username=BROKER_USER
+                )
                 break
             except:
                 logging.error("Can't connect to broker")
