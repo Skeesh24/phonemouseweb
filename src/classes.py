@@ -7,8 +7,6 @@ from redis import Redis
 
 from interfaces import IBroker
 
-BROKER_USER = getenv("BROKER_USER")
-
 
 class RedisBroker(IBroker):
     def __init__(
@@ -16,16 +14,24 @@ class RedisBroker(IBroker):
         host: str,
         port: int,
         queue: str,
+        username: str,
+        password: str,
     ):
         self.host = host
         self.port = port
         self.queue = queue
+        self.username = username
+        self.password = password
 
     def open(self):
         while True:
             try:
                 self.conn = Redis(
-                    host=self.host, port=self.port, ssl=True, username=BROKER_USER
+                    host=self.host,
+                    port=self.port,
+                    ssl=True,
+                    username=self.username,
+                    password=self.password,
                 )
                 break
             except:
