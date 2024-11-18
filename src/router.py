@@ -1,7 +1,3 @@
-import asyncio
-import logging
-import random
-
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
@@ -18,8 +14,6 @@ async def event_generator(
     broker: IBroker,
 ):
     while True:
-        await asyncio.sleep(0.01)  # задержка
-
         # получение данных из брокера сообщений
         data = broker.receive()
 
